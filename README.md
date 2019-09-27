@@ -5,6 +5,4 @@
 
 `Data` file contains `BodyFat.csv` and project instructions.
 
-`Division` contains group members data cleaning process and variable selection procedure.
-
-`Integration` will hold our final project.
+`main.ipynb` is the place we process `BodyFat.csv`. 
