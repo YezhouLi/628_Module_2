@@ -1,4 +1,3 @@
-setwd("D:/Fall2019/STAT 628 Data Science Practicum/Module2")
 data = read.csv("Bodyfat.csv",header = T)
 dim(data)
 str(data)
