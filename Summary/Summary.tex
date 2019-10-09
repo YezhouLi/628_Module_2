@@ -53,6 +53,8 @@
                                 % normalem makes italics be italics, not underlines
     \usepackage{mathrsfs}
     \usepackage{multicol}
+    \usepackage{epsfig}
+    \usepackage{graphicx}
 
     
     
@@ -397,7 +399,12 @@ $$\text{Bodyfat}_i = \frac{153 \cdot X_1}{ \text{Weight} }
 
 \subsection{Model Comparison}
 
-We will compare the linear model with the fraction model to determine our final model. Table \ref{model.comp} shows the comparison of these two models. Given that fraction model's full data $R^2$ is noticeably larger than its 10-fold CV $R^2$, we conclude that the Fraction model \textbf{overfitts} on full data. In spite of that, we still choose it as our final model, because for both criteria, RMSE and $R^2$, \textbf{Fraction} model behaves \textbf{better} than \textbf{Linear model} no matter judged by Cross Validation or full data. This suggests that on average Fraction model has better generalization ability than Linear model. In conclusion, we select \textbf{Fraction model as the final model.}
+We will compare the linear model with the fraction model to determine our final model. Table \ref{model.comp} shows the comparison of these two models. Given that fraction model's full data $R^2$ is noticeably larger than its 10-fold CV $R^2$, we conclude that the Fraction model \textbf{overfitts} on full data. In spite of that, we still choose it as our final model, because for both criteria, RMSE and $R^2$, \textbf{Fraction} model behaves \textbf{better} than \textbf{Linear model} no matter judged by Cross Validation or full data. This suggests that on average Fraction model has better generalization ability than Linear model. \\
+
+The above paragraph shows that Fraction model is better than Linear model. Before we jump to any conclusion, we should check whether Fraction model satisfies model assumptions of Linear Regression Model. Figure \ref{fig:FracMdAspCheck} shows that model satisfies Linearity, Homoscedasticity, Normality of error term in general. However, in the upper-left figure, we notice a \textbf{"bowed"} pattern of the red line, indicating that Fraction model makes systematic errors especially when it's predicting \textbf{low} Bodyfat. \\
+
+In conclusion, we select \textbf{Fraction model as the final model.}
+
 
 \begin{table}[]
 \centering
@@ -415,7 +422,12 @@ model & CV & Full Data & CV & Full data \\
 \end{table}
 
 
-
+\begin{figure}[h!]
+  \centering
+  \includegraphics{../Figure/FracMdAspCheck}
+  \caption{Fraction Model Assumptions Check}
+  \label{fig:FracMdAspCheck}
+\end{figure}
 
 
 
