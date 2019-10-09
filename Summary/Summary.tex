@@ -367,7 +367,7 @@ As shown in Table \ref{frac.cv}, \textbf{ABDOMEN} ranks top in the table no matt
 
 Then we investigate further into the fraction model associated \textbf{ABDOMEN}. The summary of this model indicates that \textbf{intercept} is \textbf{not} significant given its p value is 0.48, while the other 2 variables are both significant. Hence, we drop intercept, which produces a model of 0.96 $R^2$:
 
-$$\text{Bodyfat}_i = \frac{153 \cdot X_1}{ \text{Weight} }
+$$\text{Bodyfat}_i = 153 \cdot \frac{ABDOMEN}{ \text{Weight} }
 				 + \frac{1.06 \times 10^4}{ \text{Weight} }$$
 
  \begin{table}[]
@@ -401,10 +401,7 @@ $$\text{Bodyfat}_i = \frac{153 \cdot X_1}{ \text{Weight} }
 
 We will compare the linear model with the fraction model to determine our final model. Table \ref{model.comp} shows the comparison of these two models. Given that fraction model's full data $R^2$ is noticeably larger than its 10-fold CV $R^2$, we conclude that the Fraction model \textbf{overfitts} on full data. In spite of that, we still choose it as our final model, because for both criteria, RMSE and $R^2$, \textbf{Fraction} model behaves \textbf{better} than \textbf{Linear model} no matter judged by Cross Validation or full data. This suggests that on average Fraction model has better generalization ability than Linear model. \\
 
-The above paragraph shows that Fraction model is better than Linear model. Before we jump to any conclusion, we should check whether Fraction model satisfies model assumptions of Linear Regression Model. Figure \ref{fig:FracMdAspCheck} shows that model satisfies Linearity, Homoscedasticity, Normality of error term in general. However, in the upper-left figure, we notice a \textbf{"bowed"} pattern of the red line, indicating that Fraction model makes systematic errors especially when it's predicting \textbf{low} Bodyfat. \\
-
-In conclusion, we select \textbf{Fraction model as the final model.}
-
+The above paragraph shows that Fraction model is better than Linear model. Before we jump to any conclusion, we should check whether Fraction model satisfies model assumptions of Linear Regression Model. Figure \ref{fig:FracMdAspCheck} shows that model satisfies Linearity, Homoscedasticity, Normality of error term in general. However, in the upper-left figure, we notice a \textbf{"bowed"} pattern of the red line, indicating that Fraction model makes systematic errors especially when it's predicting \textbf{low} Bodyfat.
 
 \begin{table}[]
 \centering
@@ -429,6 +426,42 @@ model & CV & Full Data & CV & Full data \\
   \label{fig:FracMdAspCheck}
 \end{figure}
 
+
+
+\section{Conclcusion}
+In conclusion, we select \textbf{Fraction model as the final model.} This model is good in the sense that: 
+
+\begin{itemize}
+	\item Simple model: Use only two accessible measurements, weight and abdomen. 
+	\item Precise model: Relatively low RMSE and high $R^2$.
+	\item Logical model: Utilize Siri equation and estimation of density to develop model, so that there is physical logics in the model. 
+\end{itemize}
+
+However, this model also the following flaws: 
+
+\begin{itemize}
+	\item Overfitts on full data. 
+	\item Systematically less precise predicting low and high Bodyfat. 
+	\item Restriction on the amount of variables leads to a crude estimation of volume. 
+\end{itemize}
+
+
+
+
+\section{Contribution}
+
+\begin{itemize}
+	\item Chao Change: Shiny App
+	\item Yezhou Li: Summary (2.2 - )
+	\item Shuyang Chen: Presentation Slides
+	\item Ping YU: Summary ( - 2.1)
+\end{itemize}
+
+
+
+
+
+\section{Reference}
 
 
 
