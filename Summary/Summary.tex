@@ -1,4 +1,4 @@
-\documentclass[11pt, twocolumn,letterpaper]{article}
+\documentclass[11pt, twocolumn]{article}
 
     
     
@@ -276,6 +276,7 @@
 
 
 \noindent
+
 \begin{abstract}
 The current way of measuring body fat is complicated and inaccurate. Our group try to come up with a precise, robust and simple model with \textbf{two measurements} to calculate body fat.
 \end{abstract}
@@ -307,12 +308,16 @@ We decide to use forward, backward selection with AIC and BIC as the criterion t
 \begin{equation}
 \text{Bodyfat} \sim \text{Abdomen} + \text{Weight} + \text{Wrist} + \text{Forearm}
 \end{equation}
-This model has an adjusted $R^2 = 0.719$ and $BIC=1417.43$. \\
-Next, we look into the multicollinearity issues among the four variables by checking their VIF values. In this step, we divide the data set into training set (70\%) and test set (30\%). The random seed here is $123$. Table \ref{vif} shows the result and it shows that from the full model, weight has the highest VIF value and it may have some multicollinearity problem. \\
+This model has an adjusted $R^2 = 0.719$ and $BIC=1417.43$. 
+\\
+
+Next, we look into the multicollinearity issues among the four variables by checking their VIF values. In this step, we divide the data set into training set (70\%) and test set (30\%). The random seed here is $123$. Table \ref{vif} shows the result and it shows that from the full model, weight has the highest VIF value and it may have some multicollinearity problem. 
+\\
+
 In order to find two variables that has the best prediction power while suffer less from multicolliearity problem, we are going to drop the variables gradually to see whether the model performance changes a lot. Table \ref{linear.performance} shows the result. \textbf{ABDOMEN} is an important variable since by dropping it the $R^2$ drops to 0.17 and the RMSE increases. By making trade-off between RMSE and $R^2$, we conclude that the model with \textbf{ABDOMEN} and \textbf{WRIST} is the best linear model.
 \begin{align*}
-\text{Bodyfat} = 0.682 \times \text{Abeomen} -2.022 \times \text{Wrist}\\
-				 -7.256, R^2 = 0.6832
+\text{Bodyfat} = 0.682 \times \text{Abeomen}\\
+			    -2.022 \times \text{Wrist} -7.256\\ R^2 = 0.6832
 \end{align*}
 
 \begin{table}
@@ -350,10 +355,83 @@ VIF & 7.70 & 5.51 & 1.70 & 2.12 \\
 
 \subsection{Fraction Model}
 Given Siri equation, we notice that there is a linear relationship between \textbf{BodyFat} and $1 / \textbf{Density}$. By physical theorem, we know that \textbf{Density} can be calculated by \textbf{Volume} and \textbf{Weight}. Since we already possess accurate measure of \textbf{Weight}, the idea is to estimate volume using the remaining variables. Taking "Rule of Thumb" into account, we develop a new model named \textbf{Fraction Model}: 
-\\
-$$\text{Bodyfat} = \frac{\beta_1 \mathbf{X}_i + \beta_2}{ \text{Weight}_i } + \beta_3$$
-\\
-We will use \textbf{10-fold Cross Validation} to find the best $\mathbf{X}_i$
+
+$$\text{Bodyfat} = \beta_1 \frac{X_1}{ \text{Weight} }
+				 + \beta_2 \frac{1}{ \text{Weight} } + \beta_3$$
+
+We will use \textbf{10-fold Cross Validation} to find the best $X_i$ among the remaining 13 variables. The result of Cross Validation is shown in Table \ref{frac.cv}, increasingly sorted by \textbf{RMSE}. \\
+
+As shown in Table \ref{frac.cv}, \textbf{ABDOMEN} ranks top in the table no matter sorted by RMSE or $R^2$. Therefore, we choose \textbf{ABDOMEN} as our optimal $X_1$. \\
+
+Then we investigate further into the fraction model associated \textbf{ABDOMEN}. The summary of this model indicates that \textbf{intercept} is \textbf{not} significant given its p value is 0.48, while the other 2 variables are both significant. Hence, we drop intercept, which produces a model of 0.96 $R^2$:
+
+$$\text{Bodyfat}_i = \frac{153 \cdot X_1}{ \text{Weight} }
+				 + \frac{1.06 \times 10^4}{ \text{Weight} }$$
+
+ \begin{table}[]
+    \centering
+    \begin{tabular}{l|ccc}
+        \hline
+         Variable & RMSE & $R^2$ \\
+         \hline
+         \textbf{ABDOMEN} & \textbf{4.06} & \textbf{0.72} \\
+         ADIPOSITY & 5.10 & 0.55 \\
+         CHEST & 5.41 & 0.51 \\
+         AGE & 5.51 & 0.47 \\
+         WRIST & 5.73 & 0.43 \\
+         HEIGHT & 5.75 & 0.51 \\
+         HIP & 5.76 & 0.43 \\
+         THIGH & 5.84 & 0.40 \\
+         NECK & 5.87 & 0.41 \\
+         ANKLE & 5.88 & 0.41 \\
+         KNEE & 5.90 & 0.40 \\
+         FOREARM & 5.92 & 0.39 \\
+         BICEPS & 5.92 & 0.39 \\
+         \hline
+    \end{tabular}
+    \caption{Fraction Model Selection}
+    \label{frac.cv}
+\end{table}
+
+
+
+\subsection{Model Comparison}
+
+We will compare the linear model with the fraction model to determine our final model. Table \ref{model.comp} shows the comparison of these two models. Given that fraction model's full data $R^2$ is noticeably larger than its 10-fold CV $R^2$, we conclude that the Fraction model \textbf{overfitts} on full data. In spite of that, we still choose it as our final model, because for both criteria, RMSE and $R^2$, \textbf{Fraction} model behaves \textbf{better} than \textbf{Linear model} no matter judged by Cross Validation or full data. This suggests that on average Fraction model has better generalization ability than Linear model. In conclusion, we select \textbf{Fraction model as the final model.}
+
+\begin{table}[]
+\centering
+\begin{tabular}{l|cc|cc}
+\hline
+      & \multicolumn{2}{c}{RMSE} & \multicolumn{2}{c}{$R^2$} \\
+\hline
+model & CV & Full Data & CV & Full data \\
+\hline
+ Linear & 4.20 & 4.21 & 0.70 & 0.68\\
+ Fraction &  4.03 & 4.04 & 0.72 & 0.96
+\end{tabular}
+\caption{Model Comparison}
+\label{model.comp}
+\end{table}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
