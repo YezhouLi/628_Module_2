@@ -1,6 +1,6 @@
 \documentclass[11pt, twocolumn]{article}
 
-    
+    \usepackage{hyperref}
     
     \usepackage[T1]{fontenc}
     % Nicer default font (+ math font) than Computer Modern for most use cases
@@ -307,11 +307,9 @@ We compare the performance of two kinds of models: linear model and fraction mod
 
 \subsection{Linear model}
 We decide to use forward, backward selection with AIC and BIC as the criterion to choose the best linear model. The models given by AIC have more than eight variables and they are too complicated. Meanwhile, stepwise selection using BIC, no matter forward, backfard or in both direction give us the same model with four variables:
-\begin{equation}
+\begin{equation*}
 \text{Bodyfat} \sim \text{Abdomen} + \text{Weight} + \text{Wrist} + \text{Forearm}
-\end{equation}
-This model has an adjusted $R^2 = 0.719$ and $BIC=1417.43$. 
-\\
+\end{equation*}
 
 Next, we look into the multicollinearity issues among the four variables by checking their VIF values. In this step, we divide the data set into training set (70\%) and test set (30\%). The random seed here is $123$. Table \ref{vif} shows the result and it shows that from the full model, weight has the highest VIF value and it may have some multicollinearity problem. 
 \\
@@ -319,7 +317,7 @@ Next, we look into the multicollinearity issues among the four variables by chec
 In order to find two variables that has the best prediction power while suffer less from multicolliearity problem, we are going to drop the variables gradually to see whether the model performance changes a lot. Table \ref{linear.performance} shows the result. \textbf{ABDOMEN} is an important variable since by dropping it the $R^2$ drops to 0.17 and the RMSE increases. By making trade-off between RMSE and $R^2$, we conclude that the model with \textbf{ABDOMEN} and \textbf{WRIST} is the best linear model.
 \begin{align*}
 \text{Bodyfat} = 0.682 \times \text{Abeomen}\\
-			    -2.022 \times \text{Wrist} -7.256\\ R^2 = 0.6832
+			    -2.022 \times \text{Wrist} -7.256
 \end{align*}
 
 \begin{table}
@@ -367,8 +365,8 @@ As shown in Table \ref{frac.cv}, \textbf{ABDOMEN} ranks top in the table no matt
 
 Then we investigate further into the fraction model associated \textbf{ABDOMEN}. The summary of this model indicates that \textbf{intercept} is \textbf{not} significant given its p value is 0.48, while the other 2 variables are both significant. Hence, we drop intercept, which produces a model of 0.96 $R^2$:
 
-$$\text{Bodyfat}_i = 153 \cdot \frac{ABDOMEN}{ \text{Weight} }
-				 + \frac{1.06 \times 10^4}{ \text{Weight} }$$
+$$\text{Bodyfat}_i = 153 \times \frac{ABDOMEN}{ \text{Weight} }
+				 - \frac{1.06 \times 10^4}{ \text{Weight} }$$
 
  \begin{table}[]
     \centering
@@ -412,7 +410,8 @@ The above paragraph shows that Fraction model is better than Linear model. Befor
 model & CV & Full Data & CV & Full data \\
 \hline
  Linear & 4.20 & 4.21 & 0.70 & 0.68\\
- Fraction &  4.03 & 4.04 & 0.72 & 0.96
+ Fraction &  4.03 & 4.04 & 0.72 & 0.96 \\
+ \hline
 \end{tabular}
 \caption{Model Comparison}
 \label{model.comp}
@@ -421,16 +420,25 @@ model & CV & Full Data & CV & Full data \\
 
 \begin{figure}[h!]
   \centering
-  \includegraphics{../Figure/FracMdAspCheck}
+  \includegraphics{dig.png}
   \caption{Fraction Model Assumptions Check}
   \label{fig:FracMdAspCheck}
 \end{figure}
 
 
+\section{Shinny Application}
+Our body fat prediction shinny app address is \url{https://clarefrost.shinyapps.io/shiny_628_group4/}.\\
+In this app, we set different unit for weight (kg & lbs) and abdomen (cm & inches). We also put the histogram of body fat in the app for users' reference.
+
 
 \section{Conclcusion}
-In conclusion, we select \textbf{Fraction model as the final model.} This model is good in the sense that: 
+In conclusion, we select \textbf{Fraction model as the final model.} 
 
+$$\text{Bodyfat}_i = 153 \times \frac{ABDOMEN}{ \text{Weight} }
+				 - \frac{1.06 \times 10^4}{ \text{Weight} }$$
+The rule of thumb here is：$153$ times the ratio between abdomen and weight, and then minus $1.06*10^4$ times the inverse of weight.\\
+One example can be: if a person has a weight of $184.5$lbs and his abdomen circumstance is $86.4$inches. Then his body fat is $153 \times \frac{86.4}{184.5} - \frac{1.06\times 10^4}{184.5}=13.75\%$.\\
+This model is good in the sense that: 
 \begin{itemize}
 	\item Simple model: Use only two accessible measurements, weight and abdomen. 
 	\item Precise model: Relatively low RMSE and high $R^2$.
@@ -451,33 +459,10 @@ However, this model also the following flaws:
 \section{Contribution}
 
 \begin{itemize}
-	\item Chao Change: Shiny App
-	\item Yezhou Li: Summary (2.2 - )
-	\item Shuyang Chen: Presentation Slides
-	\item Ping YU: Summary ( - 2.1)
+	\item Chao Chang: Linear model variable selection with BIC/AIC in both direction; Build the shiny App.
+	\item Yezhou Li: Fraction model variable selection with cross validation; Report summary.
+	\item Shuyang Chen: Linear model variable selection with backward/ forward BIC/AIC; Organize code, figure and data file.
+	\item Ping Yu: Linear model variable selection with Mallow's Cp and $R^2$; Report summary; Presentation slides.
 \end{itemize}
-
-
-
-
-
-\section{Reference}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 \end{document}
