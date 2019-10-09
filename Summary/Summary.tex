@@ -1,4 +1,4 @@
-\documentclass[11pt]{article}
+\documentclass[11pt, twocolumn,letterpaper]{article}
 
     
     
@@ -52,7 +52,7 @@
     \usepackage[normalem]{ulem} % ulem is needed to support strikethroughs (\sout)
                                 % normalem makes italics be italics, not underlines
     \usepackage{mathrsfs}
-    
+    \usepackage{multicol}
 
     
     
@@ -274,18 +274,30 @@
     
     \maketitle
 
+
 \noindent
+\begin{abstract}
 The current way of measuring body fat is complicated and inaccurate. Our group try to come up with a precise, robust and simple model with \textbf{two measurements} to calculate body fat.
+\end{abstract}
+
 
 
 \section{Data Cleaning}
-In this section, we check some duplicate records, delete and impute some possible bad points. In the end, we delete $163rd, 182nd, 216th, 221st$ examples.
-\begin{itemize}
-\item From the histogram of BODYFAT, the $216th$ example has a body fat of 45.1\% and a density of 0.995, which is impossible for human. the $182nd$ example has a body fat of 0 and we get a negative body fat value using the body fat-density formula. Thus, these two point are deleted from the raw data set. 
-\item The histogram of HEIGHT shows that the $42rd$ example is only 29 inches, which is obviously a mistaken record. We impute his height using the BMI (adiposity) formula and the result is 69.4 inches.
-\item The $39th$ example has the largest value in weight, abdomen, chest, hip, thigh, knee, biceps, wrist and adiposity. We believe this man is just too fat and it may contains some useful information. We keep this point.
-\item We compute the ADIPOSITY  using weight and height to see whether there are some wrong records in this variable. The $163rd$ and $221st$ example has much larger difference between the records and computed values than other points. Thus, we believe the two points are mistaken records and delete them from raw data.
-\end{itemize}
+
+
+In this section, we check some duplicate records, delete and impute some possible bad points. In the end, we delete $163rd,\ 182nd,\ 216th,\ 221st$ examples.
+\\
+
+From the histogram of BODYFAT, the $216th$ example has a body fat of 45.1\% and a density of 0.995, which is impossible for human. the $182nd$ example has a body fat of 0 and we get a negative body fat value using the body fat-density formula. Thus, these two point are deleted from the raw data set. 
+\\
+
+The histogram of HEIGHT shows that the $42rd$ example is only 29 inches, which is obviously a mistaken record. We impute his height using the BMI (adiposity) formula and the result is 69.4 inches.
+\\
+
+The $39th$ example has the largest value in weight, abdomen, chest, hip, thigh, knee, biceps, wrist and adiposity. We believe this man is just too fat and it may contains some useful information. We keep this point.
+\\
+
+We compute the ADIPOSITY  using weight and height to see whether there are some wrong records in this variable. The $163rd$ and $221st$ example has much larger difference between the records and computed values than other points. Thus, we believe the two points are mistaken records and delete them from raw data.
 
 \section{Model Selection}
 We compare the performance of two kinds of models: linear model and fraction model.
@@ -298,9 +310,10 @@ We decide to use forward, backward selection with AIC and BIC as the criterion t
 This model has an adjusted $R^2 = 0.719$ and $BIC=1417.43$. \\
 Next, we look into the multicollinearity issues among the four variables by checking their VIF values. In this step, we divide the data set into training set (70\%) and test set (30\%). The random seed here is $123$. Table \ref{vif} shows the result and it shows that from the full model, weight has the highest VIF value and it may have some multicollinearity problem. \\
 In order to find two variables that has the best prediction power while suffer less from multicolliearity problem, we are going to drop the variables gradually to see whether the model performance changes a lot. Table \ref{linear.performance} shows the result. \textbf{ABDOMEN} is an important variable since by dropping it the $R^2$ drops to 0.17 and the RMSE increases. By making trade-off between RMSE and $R^2$, we conclude that the model with \textbf{ABDOMEN} and \textbf{WRIST} is the best linear model.
-\begin{equation}
-\text{Bodyfat} = 0.682 \times \text{Abeomen} -2.022 \times \text{Wrist} - 7.256, R^2 = 0.6832
-\end{equation}
+\begin{align*}
+\text{Bodyfat} = 0.682 \times \text{Abeomen} -2.022 \times \text{Wrist}\\
+				 -7.256, R^2 = 0.6832
+\end{align*}
 
 \begin{table}
 \centering
@@ -336,12 +349,12 @@ VIF & 7.70 & 5.51 & 1.70 & 2.12 \\
 
 
 \subsection{Fraction Model}
-Given Siri equation, we notice that there is a linear relationship between \textbf{BodyFat} and $1 / \textbf{Density}$. By physical theorem, we know that \textbf{Density} can be calculated by \textbf{Volume} and \textbf{Weight}. Since we already possess accurate measure of \textbf{Weight}, the idea is to estimate volume by the remaining variables. 
- 
+Given Siri equation, we notice that there is a linear relationship between \textbf{BodyFat} and $1 / \textbf{Density}$. By physical theorem, we know that \textbf{Density} can be calculated by \textbf{Volume} and \textbf{Weight}. Since we already possess accurate measure of \textbf{Weight}, the idea is to estimate volume using the remaining variables. Taking "Rule of Thumb" into account, we develop a new model named \textbf{Fraction Model}: 
+\\
+$$\text{Bodyfat} = \frac{\beta_1 \mathbf{X}_i + \beta_2}{ \text{Weight}_i } + \beta_3$$
+\\
+We will use \textbf{10-fold Cross Validation} to find the best $\mathbf{X}_i$
 
 
 
-    
-    
-    
-    \end{document}
+\end{document}
