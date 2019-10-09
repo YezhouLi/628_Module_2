@@ -12,7 +12,7 @@ This folder includes the R codes we use to analyse data and get the final model.
 This folder includes original data and cleaned data.
 
 ## Figure
-This folder contains any figures produced in our analysis.
+This folder contains the figures produced in our analysis.
 
 ## Slides
 This folder includes the slides for our presentation.
