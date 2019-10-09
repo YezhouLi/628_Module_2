@@ -18,7 +18,7 @@ This folder contains the figures produced in our analysis.
 This folder includes the slides for our presentation.
 
 ## Summary
-This summary summarized the process of module 2. It tells how we think and waht we do.
+This summary summarizes the process of module 2. It tells how we think and waht we do.
 
 ## Shiny link
 https://clarefrost.shinyapps.io/shiny_628_group4/
