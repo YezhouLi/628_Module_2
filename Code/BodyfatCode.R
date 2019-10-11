@@ -1,3 +1,4 @@
+########Load data and packages###########
 ## assume working directory is the one that current juno is in
 set.seed(1)
 dt.path = "Data/BodyFat.csv"
@@ -6,6 +7,8 @@ body.fat = subset(dt.fat, select = c(-IDNO, -DENSITY))
 if(!require("dplyr")){install.packages("dplyr")}
 if(!require("tidyverse")){install.packages("tidyverse")}
 if(!require("caret")){install.packages("caret")}
+
+############Data Description##############
 summary(dt.fat)
 par(mfrow=c(2,3))
 hist(dt.fat$BODYFAT,breaks = 20, 
@@ -21,6 +24,8 @@ hist(dt.fat$HEIGHT,breaks = 20,
 hist(dt.fat$ADIPOSITY,breaks = 20, 
      main = "Histogram of Adiposity",xlab="Adiposity")
 plot(dt.fat$BODYFAT ~ 1/dt.fat$DENSITY,xlab = "1/Density",ylab = "Bodyfat")
+
+###########Data cleaning###########
 id<-as.vector(dt.fat$IDNO)
 bodyf<-as.vector(dt.fat$BODYFAT)
 den<-as.vector(dt.fat$DENSITY)
@@ -59,6 +64,8 @@ body.fat.clean = body.fat[-c(163, 182,216),]
 model.clean2 = lm(BODYFAT ~ ., data = body.fat.clean)
 layout(matrix(1:4, ncol = 2))
 plot(model.clean2)
+
+##########variable selection for linear model#####################
 model.1 <- lm(BODYFAT~1,data = body.fat.clean)
 model.AIC.forward <- step(model.1,list(lower = model.1,upper = model.clean2),k = 2,direction = "forward",trace = 0)
 summary(model.AIC.forward)
@@ -85,6 +92,8 @@ Cpplot(g) # Include all variable.
 r = leaps::leaps(X,Y,nbest=1, method="adjr2")
 plot(r$adjr2)
 (r$which)[which(r$adjr2 == max(r$adjr2)),] # 1,2,3,7,12,13
+
+###########Data Transformation##############
 data = body.fat.clean
 data.invwei <- data.frame(BODYFAT = data$BODYFAT,HEIGHT = data$HEIGHT/data$WEIGHT,
                           ADIPOSITY = data$ADIPOSITY/data$WEIGHT,NECK = data$NECK/data$WEIGHT,
@@ -94,6 +103,8 @@ data.invwei <- data.frame(BODYFAT = data$BODYFAT,HEIGHT = data$HEIGHT/data$WEIGH
                           BICEPS = data$BICEPS/data$WEIGHT,FOREARM = data$FOREARM/data$WEIGHT,
                           WRIST = data$WRIST/data$WEIGHT)
 data.invwei$inv_wei <- 1/data$WEIGHT
+
+#########variables selection for fraction model###########
 BF.nonlinear = body.fat.clean
 kFoldCV = 10
 
@@ -138,6 +149,8 @@ frac.model.2 = lm(BODYFAT ~ . -1, data = BF.nonlinear[, c("BODYFAT", "invWeight"
 summary(frac.model.2)
 #install.packages("caret")
 #install.packages("car")
+
+###########Multilinearity###########
 library(caret)
 library(car)
 attach(body.fat.clean)
